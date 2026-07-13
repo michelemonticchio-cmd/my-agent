@@ -1,18 +1,37 @@
 package com.monticchio.myagent.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
+import java.util.Map;
 
 public class AnthropicDtos {
 
     public record AnthropicRequest(
             String model,
             int max_tokens,
-            List<ChatMessage> messages
+            List<ChatMessage> messages,
+            List<ToolDefinition> tools
     ) {}
 
-    public record ChatMessage(String role, String content) {}
+    public record ChatMessage(String role, Object content) {} // content: String oppure List<ContentBlock>
 
-    public record AnthropicResponse(List<ContentBlock> content) {}
+    public record ToolDefinition(
+            String name,
+            String description,
+            Map<String, Object> input_schema
+    ) {}
 
-    public record ContentBlock(String type, String text) {}
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record ContentBlock(
+            String type,
+            String text,                          // per type="text"
+            String id, String name, Object input,  // per type="tool_use"
+            String tool_use_id, Object content      // per type="tool_result"
+    ) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record AnthropicResponse(List<ContentBlock> content, String stop_reason) {}
 }
