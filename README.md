@@ -10,7 +10,7 @@ LLM con function calling.
 
 ## Funzionalità
 - [x] Endpoint `POST /api/chat` — invia un messaggio a Claude e restituisce la risposta
-- [ ] Memoria conversazionale (cronologia su DB)
+- [x] Memoria conversazionale (cronologia su DB)
 - [ ] Function calling / tool
 - [ ] Autenticazione JWT
 - [ ] Frontend chat
