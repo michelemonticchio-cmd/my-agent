@@ -1,6 +1,7 @@
 package com.monticchio.myagent.controller;
 
 import com.monticchio.myagent.service.ClaudeService;
+import com.monticchio.myagent.service.ClaudeService.ChatResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,12 +14,12 @@ public class ChatController {
         this.claudeService = claudeService;
     }
 
-    public record ChatRequest(String message) {}
-    public record ChatResponse(String reply) {}
+    public record ChatRequest(Long conversationId, String message) {}
+    public record ChatResponse(Long conversationId, String reply) {}
 
     @PostMapping("/chat")
     public ChatResponse chat(@RequestBody ChatRequest request) {
-        String reply = claudeService.chat(request.message());
-        return new ChatResponse(reply);
+        ChatResult result = claudeService.chat(request.conversationId(), request.message());
+        return new ChatResponse(result.conversationId(), result.reply());
     }
 }
