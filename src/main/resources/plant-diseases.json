@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Xylella fastidiosa (olive quick decline syndrome)",
+    "plant": "olive",
+    "symptoms": ["wilting branches", "scorched leaves", "tree drying in patches"],
+    "treatment": "No known cure. If confirmed, mandatory uprooting under regional regulations; monitor and control the insect vector (meadow spittlebug); report to the Regional Plant Health Observatory (Osservatorio Fitosanitario Regionale)."
+  },
+  {
+    "name": "Olive fruit fly (Bactrocera oleae)",
+    "plant": "olive",
+    "symptoms": ["black spots on olives", "oviposition holes in olives", "fallen olives", "olive rot"],
+    "treatment": "Install chromotropic traps for monitoring; apply protein bait sprays or copper-based treatments if infestation is high; harvest early if infestation is severe."
+  },
+  {
+    "name": "Black scale (Saissetia oleae)",
+    "plant": "olive",
+    "symptoms": ["small brown bumps on twigs and leaves", "sticky honeydew on leaves", "sooty mold on leaves"],
+    "treatment": "Prune to improve air circulation; introduce natural predators such as parasitic wasps; apply horticultural oil or a targeted insecticide in case of heavy infestation."
+  },
+  {
+    "name": "Peacock spot (Spilocaea oleagina)",
+    "plant": "olive",
+    "symptoms": ["yellow-brown spots on upper leaf surface", "premature leaf drop"],
+    "treatment": "Apply copper-based fungicide in autumn and spring; improve canopy ventilation through pruning; remove fallen infected leaves."
+  },
+  {
+    "name": "Verticillium wilt (Verticillium dahliae)",
+    "plant": "olive",
+    "symptoms": ["sudden wilting of shoots", "one-sided branch dieback", "tree drying in patches"],
+    "treatment": "No effective chemical cure; remove and destroy affected branches; avoid rotating with susceptible crops such as cotton or tomato; ensure balanced irrigation and avoid water stress."
+  },
+  {
+    "name": "Powdery mildew on grapevine (Erysiphe necator)",
+    "plant": "grapevine",
+    "symptoms": ["white powdery coating on leaves"],
+    "treatment": "Apply sulfur-based fungicide treatments; improve canopy airflow through leaf removal; monitor humidity levels."
+  },
+  {
+    "name": "Downy mildew on grapevine (Plasmopara viticola)",
+    "plant": "grapevine",
+    "symptoms": ["yellow oily spots on upper leaf surface", "white downy mold on leaf underside"],
+    "treatment": "Apply copper-based or systemic fungicide treatments preventively before rain events; ensure good vineyard drainage and canopy ventilation."
+  },
+  {
+    "name": "Citrus tristeza virus (CTV)",
+    "plant": "citrus",
+    "symptoms": ["stem pitting on citrus", "yellowing and stunted citrus trees", "quick decline of grafted citrus"],
+    "treatment": "No cure once infected; use certified virus-free nursery stock; control aphid vectors such as the brown citrus aphid; remove and destroy infected trees to prevent spread."
+  },
+  {
+    "name": "Cottony cushion scale (Icerya purchasi)",
+    "plant": "citrus",
+    "symptoms": ["white cottony masses on citrus branches", "sticky honeydew on leaves", "sooty mold on leaves"],
+    "treatment": "Introduce the natural predator Rodolia cardinalis (vedalia beetle); apply horticultural oil in case of heavy infestation; prune affected branches."
+  },
+  {
+    "name": "Citrus leafminer (Phyllocnistis citrella)",
+    "plant": "citrus",
+    "symptoms": ["silvery serpentine trails on citrus leaves", "curled young citrus leaves"],
+    "treatment": "Prune and destroy affected shoots; encourage natural parasitoid wasps; avoid excessive nitrogen fertilization, which stimulates the new flush growth the pest prefers."
+  },
+  {
+    "name": "Fig rust (Cerotelium fici)",
+    "plant": "fig",
+    "symptoms": ["orange-brown pustules on underside of fig leaves", "premature leaf drop"],
+    "treatment": "Apply copper-based fungicide at first symptoms; remove and destroy fallen infected leaves; improve air circulation through pruning."
+  },
+  {
+    "name": "Fig mosaic virus",
+    "plant": "fig",
+    "symptoms": ["mottled yellow-green mosaic pattern on fig leaves", "distorted fig leaves", "reduced fruit quality"],
+    "treatment": "No cure available; propagate only from certified virus-free planting material; control eriophyid mite vectors; remove severely affected trees."
+  },
+  {
+    "name": "Almond leaf scorch (Xylella fastidiosa)",
+    "plant": "almond",
+    "symptoms": ["marginal leaf scorch on almond leaves", "premature defoliation of almond trees", "branch dieback on almond"],
+    "treatment": "No known cure; remove and destroy infected trees under regional Xylella containment protocols; control leafhopper and spittlebug vectors; report to the Regional Plant Health Observatory."
+  },
+  {
+    "name": "Brown rot (Monilinia laxa)",
+    "plant": "almond",
+    "symptoms": ["brown rot on almond fruit", "blighted almond blossoms", "gummy exudate on almond twigs"],
+    "treatment": "Apply fungicide treatments at bloom stage; prune out and destroy mummified fruit and blighted twigs; improve canopy ventilation."
+  }
+]
