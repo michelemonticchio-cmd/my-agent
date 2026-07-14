@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class ClaudeService {
 
     private final RestClient restClient;
     private final String model;
+    private final String systemPrompt;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
     private final ToolRegistry toolRegistry;
@@ -44,6 +48,12 @@ public class ClaudeService {
                 .defaultHeader("anthropic-version", "2023-06-01")
                 .defaultHeader("content-type", "application/json")
                 .build();
+
+        try (InputStream in = getClass().getResourceAsStream("/system-prompt.txt")) {
+            this.systemPrompt = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to load system-prompt.txt", e);
+        }
     }
 
     public record ChatResult(Long conversationId, String reply) {}
@@ -74,7 +84,7 @@ public class ClaudeService {
         String finalText = null;
 
         for (int iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
-            AnthropicResponse response = callAnthropic(new AnthropicRequest(model, 1024, messages, tools));
+            AnthropicResponse response = callAnthropic(new AnthropicRequest(model, 1024, messages, tools, systemPrompt));
 
             if (!"tool_use".equals(response.stop_reason())) {
                 finalText = response.content().stream()
@@ -85,17 +95,26 @@ public class ClaudeService {
                 break;
             }
 
-            ContentBlock toolUse = response.content().stream()
+            List<ContentBlock> toolUses = response.content().stream()
                     .filter(block -> "tool_use".equals(block.type()))
-                    .findFirst()
-                    .orElseThrow(() -> new LlmException("Model reported tool_use but did not provide a tool_use block"));
+                    .toList();
 
-            String result = toolRegistry.execute(toolUse.name(), toolUse.input());
+            if (toolUses.isEmpty()) {
+                throw new LlmException("Model reported tool_use but did not provide any tool_use block");
+            }
+
+            // Executed one at a time, in the order Claude requested them: our tools are all
+            // fast (local lookups or a single HTTP call), so real concurrency isn't worth the
+            // added complexity of multi-threaded exception handling and service thread-safety.
+            List<ContentBlock> toolResults = toolUses.stream()
+                    .map(toolUse -> {
+                        String result = toolRegistry.execute(toolUse.name(), toolUse.input());
+                        return new ContentBlock("tool_result", null, null, null, null, toolUse.id(), result);
+                    })
+                    .toList();
 
             messages.add(new ChatMessage("assistant", response.content()));
-            messages.add(new ChatMessage("user", List.of(
-                    new ContentBlock("tool_result", null, null, null, null, toolUse.id(), result)
-            )));
+            messages.add(new ChatMessage("user", toolResults));
         }
 
         if (finalText == null) {

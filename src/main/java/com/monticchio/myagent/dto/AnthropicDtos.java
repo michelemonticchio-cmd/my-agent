@@ -12,7 +12,8 @@ public class AnthropicDtos {
             String model,
             int max_tokens,
             List<ChatMessage> messages,
-            List<ToolDefinition> tools
+            List<ToolDefinition> tools,
+            String system
     ) {}
 
     public record ChatMessage(String role, Object content) {} // content: String or List<ContentBlock>

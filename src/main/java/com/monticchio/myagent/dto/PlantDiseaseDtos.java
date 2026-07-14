@@ -11,6 +11,8 @@ public class PlantDiseaseDtos {
             String name,
             String plant,
             List<String> symptoms,
-            String treatment
+            String treatment,
+            String careAdjustments,
+            String treatmentCaveats
     ) {}
 }

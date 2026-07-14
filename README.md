@@ -8,20 +8,29 @@ memory, and extends its knowledge through custom tools (function calling).
 ## Domain
 
 The assistant helps with the crops most common in Salento: olive, grapevine,
-citrus, fig and almond. It combines two kinds of information:
+citrus, fig and almond. It combines three kinds of information:
 - **Live weather data** (Open-Meteo), to reason about upcoming conditions
+- **The current date**, to reason about the crop's seasonal growth phase
+  (flowering, harvest, planting/grafting window, etc.)
 - **A curated local knowledge base** of diseases and pests (e.g. Xylella
-  fastidiosa, olive fruit fly), to ground its answers in verified information
-  instead of relying only on the model's own training data
+  fastidiosa, olive fruit fly), including known treatment care-adjustments
+  and timing caveats, to ground its answers in verified information instead
+  of relying only on the model's own training data
 
-Because both tools are exposed to the same agent loop, the model can combine
-them on its own — e.g. diagnosing a disease and factoring in the forecast
-before suggesting a treatment — without any hardcoded orchestration logic.
+All three tools are exposed to the same agent loop, and a system prompt
+instructs the model to combine them on its own — e.g. diagnosing a disease,
+then factoring in the season and the forecast before suggesting (or
+adapting) a treatment — without any hardcoded orchestration logic in Java.
 
 ## Architecture highlights
 - **Agent loop with tool calling**: `ClaudeService` drives a loop that keeps
   calling the Anthropic API and executing tools until the model returns a
-  final text answer (bounded by a max-iteration safety limit)
+  final text answer (bounded by a max-iteration safety limit); each turn can
+  contain multiple `tool_use` blocks, executed in order
+- **System-prompt-driven orchestration**: a single system prompt establishes
+  the agent's persona and nudges it to combine tools (weather, season,
+  diagnosis) when it genuinely improves the advice — no hardcoded
+  if-this-then-that logic decides when tools get combined
 - **Tool auto-discovery**: any `@Component implements Tool` is picked up
   automatically by `ToolRegistry` via Spring's constructor injection of
   `List<Tool>` — adding a tool never requires touching the registry or the
@@ -38,7 +47,7 @@ before suggesting a treatment — without any hardcoded orchestration logic.
 |---|---|---|
 | `che_ore_sono` | Current date/time | System clock |
 | `get_weather_forecast` | Multi-day weather forecast | Open-Meteo API |
-| `diagnose_plant_disease` | Disease/pest lookup by symptoms | Curated local JSON knowledge base |
+| `diagnose_plant_disease` | Disease/pest lookup by symptoms, with treatment care-adjustments and timing caveats | Curated local JSON knowledge base |
 
 ## Stack
 - Java 25, Spring Boot, Spring Data JPA
@@ -49,7 +58,7 @@ before suggesting a treatment — without any hardcoded orchestration logic.
 - [x] `POST /api/chat` endpoint — sends a message to Claude and returns the reply
 - [x] Conversation memory (history persisted to DB)
 - [x] Function calling / tools (agent loop with tool_use)
-- [ ] Multi-turn parallel tool calls (currently one tool per iteration)
+- [x] Multi-turn parallel tool calls (multiple `tool_use` blocks per turn)
 - [ ] Multimodal input (plant photos)
 - [ ] JWT authentication
 - [ ] Chat frontend

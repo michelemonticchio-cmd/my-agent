@@ -3,84 +3,108 @@
     "name": "Xylella fastidiosa (olive quick decline syndrome)",
     "plant": "olive",
     "symptoms": ["wilting branches", "scorched leaves", "tree drying in patches"],
-    "treatment": "No known cure. If confirmed, mandatory uprooting under regional regulations; monitor and control the insect vector (meadow spittlebug); report to the Regional Plant Health Observatory (Osservatorio Fitosanitario Regionale)."
+    "treatment": "No known cure. If confirmed, mandatory uprooting under regional regulations; monitor and control the insect vector (meadow spittlebug); report to the Regional Plant Health Observatory (Osservatorio Fitosanitario Regionale).",
+    "treatmentCaveats": "This is a regulated quarantine pathogen in Puglia; do not attempt unauthorized treatment or movement of plant material from a suspect tree — all action must follow official containment protocols regardless of season or weather."
   },
   {
     "name": "Olive fruit fly (Bactrocera oleae)",
     "plant": "olive",
     "symptoms": ["black spots on olives", "oviposition holes in olives", "fallen olives", "olive rot"],
-    "treatment": "Install chromotropic traps for monitoring; apply protein bait sprays or copper-based treatments if infestation is high; harvest early if infestation is severe."
+    "treatment": "Install chromotropic traps for monitoring; apply protein bait sprays or copper-based treatments if infestation is high; harvest early if infestation is severe.",
+    "careAdjustments": "Bait sprays work by attraction, so avoid placing bait stations near beneficial-insect foraging areas where possible; after any spray, respect the product label's pre-harvest interval before picking treated fruit.",
+    "treatmentCaveats": "Avoid spraying during hot midday hours, when bait dries out too quickly to remain attractive; early morning or evening application is generally more effective and safer for pollinators."
   },
   {
     "name": "Black scale (Saissetia oleae)",
     "plant": "olive",
     "symptoms": ["small brown bumps on twigs and leaves", "sticky honeydew on leaves", "sooty mold on leaves"],
-    "treatment": "Prune to improve air circulation; introduce natural predators such as parasitic wasps; apply horticultural oil or a targeted insecticide in case of heavy infestation."
+    "treatment": "Prune to improve air circulation; introduce natural predators such as parasitic wasps; apply horticultural oil or a targeted insecticide in case of heavy infestation.",
+    "careAdjustments": "After an oil spray, avoid stressing the tree with drought or waterlogging for the following days, and avoid applying sulfur within a few weeks of the oil treatment (the combination increases phytotoxicity risk).",
+    "treatmentCaveats": "Avoid horticultural oil application above roughly 30-32 degrees Celsius or on drought-stressed trees, as both conditions significantly raise the risk of leaf scorch/phytotoxicity."
   },
   {
     "name": "Peacock spot (Spilocaea oleagina)",
     "plant": "olive",
     "symptoms": ["yellow-brown spots on upper leaf surface", "premature leaf drop"],
-    "treatment": "Apply copper-based fungicide in autumn and spring; improve canopy ventilation through pruning; remove fallen infected leaves."
+    "treatment": "Apply copper-based fungicide in autumn and spring; improve canopy ventilation through pruning; remove fallen infected leaves.",
+    "careAdjustments": "After copper application, avoid overhead irrigation for a day or two so the deposit adheres and isn't prematurely washed off the leaf surface.",
+    "treatmentCaveats": "Standard timing already targets autumn and pre-flowering spring windows; avoid spraying during flowering itself to protect pollinators, and avoid application right before prolonged rain, which both washes off the fungicide and favors further spread of the fungus."
   },
   {
     "name": "Verticillium wilt (Verticillium dahliae)",
     "plant": "olive",
     "symptoms": ["sudden wilting of shoots", "one-sided branch dieback", "tree drying in patches"],
-    "treatment": "No effective chemical cure; remove and destroy affected branches; avoid rotating with susceptible crops such as cotton or tomato; ensure balanced irrigation and avoid water stress."
+    "treatment": "No effective chemical cure; remove and destroy affected branches; avoid rotating with susceptible crops such as cotton or tomato; ensure balanced irrigation and avoid water stress.",
+    "careAdjustments": "Disinfect pruning tools between cuts and between trees to reduce mechanical spread of the fungus; avoid excessive nitrogen fertilization, which can worsen symptom expression on already-infected trees."
   },
   {
     "name": "Powdery mildew on grapevine (Erysiphe necator)",
     "plant": "grapevine",
     "symptoms": ["white powdery coating on leaves"],
-    "treatment": "Apply sulfur-based fungicide treatments; improve canopy airflow through leaf removal; monitor humidity levels."
+    "treatment": "Apply sulfur-based fungicide treatments; improve canopy airflow through leaf removal; monitor humidity levels.",
+    "careAdjustments": "After a sulfur application, avoid additional plant stress such as drought during the following days.",
+    "treatmentCaveats": "Do not apply sulfur when air temperature is above roughly 30-32 degrees Celsius, since this substantially increases the risk of phytotoxic leaf and berry scorch; also avoid applying sulfur within about 2-3 weeks of an oil-based spray, as the combination is phytotoxic."
   },
   {
     "name": "Downy mildew on grapevine (Plasmopara viticola)",
     "plant": "grapevine",
     "symptoms": ["yellow oily spots on upper leaf surface", "white downy mold on leaf underside"],
-    "treatment": "Apply copper-based or systemic fungicide treatments preventively before rain events; ensure good vineyard drainage and canopy ventilation."
+    "treatment": "Apply copper-based or systemic fungicide treatments preventively before rain events; ensure good vineyard drainage and canopy ventilation.",
+    "careAdjustments": "After copper application, avoid unnecessary overhead irrigation for a few days to prevent premature wash-off and to avoid extending leaf wetness that favors further fungal spread.",
+    "treatmentCaveats": "Repeated seasonal copper use contributes to soil copper accumulation; EU Regulation 2018/1981 caps cumulative copper application at 28 kg metallic copper/ha over 7 years (a 4 kg/ha/year average, with a smoothing mechanism for difficult years) — avoid exceeding this regardless of disease pressure."
   },
   {
     "name": "Citrus tristeza virus (CTV)",
     "plant": "citrus",
     "symptoms": ["stem pitting on citrus", "yellowing and stunted citrus trees", "quick decline of grafted citrus"],
-    "treatment": "No cure once infected; use certified virus-free nursery stock; control aphid vectors such as the brown citrus aphid; remove and destroy infected trees to prevent spread."
+    "treatment": "No cure once infected; use certified virus-free nursery stock; control aphid vectors such as the brown citrus aphid; remove and destroy infected trees to prevent spread.",
+    "careAdjustments": "When removing infected material, disinfect pruning or grafting tools between trees to avoid mechanical transmission, even though the main spread route is aphid vectors and infected budwood.",
+    "treatmentCaveats": "Never propagate or graft from a tree of uncertain virus status, regardless of season."
   },
   {
     "name": "Cottony cushion scale (Icerya purchasi)",
     "plant": "citrus",
     "symptoms": ["white cottony masses on citrus branches", "sticky honeydew on leaves", "sooty mold on leaves"],
-    "treatment": "Introduce the natural predator Rodolia cardinalis (vedalia beetle); apply horticultural oil in case of heavy infestation; prune affected branches."
+    "treatment": "Introduce the natural predator Rodolia cardinalis (vedalia beetle); apply horticultural oil in case of heavy infestation; prune affected branches.",
+    "careAdjustments": "Broad-spectrum insecticide use is incompatible with an established Rodolia cardinalis population in the same period, since it will also kill the beneficial predator; avoid combining oil with sulfur treatments in a short window due to phytotoxicity risk.",
+    "treatmentCaveats": "Avoid oil spraying during citrus flowering to limit pollinator exposure, and avoid application in hot, sunny, drought-stressed conditions, which raise phytotoxicity risk."
   },
   {
     "name": "Citrus leafminer (Phyllocnistis citrella)",
     "plant": "citrus",
     "symptoms": ["silvery serpentine trails on citrus leaves", "curled young citrus leaves"],
-    "treatment": "Prune and destroy affected shoots; encourage natural parasitoid wasps; avoid excessive nitrogen fertilization, which stimulates the new flush growth the pest prefers."
+    "treatment": "Prune and destroy affected shoots; encourage natural parasitoid wasps; avoid excessive nitrogen fertilization, which stimulates the new flush growth the pest prefers.",
+    "careAdjustments": "After pruning, avoid practices that stimulate a fresh flush right away (e.g. heavy nitrogen feeding or aggressive pruning), since new tender leaves are what attract the pest.",
+    "treatmentCaveats": "Pruning affected shoots is most useful while the flush is young and actively being mined; once leaves harden, the mines are mostly cosmetic and pruning provides little practical benefit."
   },
   {
     "name": "Fig rust (Cerotelium fici)",
     "plant": "fig",
     "symptoms": ["orange-brown pustules on underside of fig leaves", "premature leaf drop"],
-    "treatment": "Apply copper-based fungicide at first symptoms; remove and destroy fallen infected leaves; improve air circulation through pruning."
+    "treatment": "Apply copper-based fungicide at first symptoms; remove and destroy fallen infected leaves; improve air circulation through pruning.",
+    "careAdjustments": "After copper application, avoid overhead irrigation for a day or two to let the deposit set and to limit leaf wetness duration.",
+    "treatmentCaveats": "Avoid applying copper fungicide in full midday sun or high heat, which increases risk of leaf phytotoxicity; if fruit is close to ripening, check the product label's pre-harvest interval before spraying."
   },
   {
     "name": "Fig mosaic virus",
     "plant": "fig",
     "symptoms": ["mottled yellow-green mosaic pattern on fig leaves", "distorted fig leaves", "reduced fruit quality"],
-    "treatment": "No cure available; propagate only from certified virus-free planting material; control eriophyid mite vectors; remove severely affected trees."
+    "treatment": "No cure available; propagate only from certified virus-free planting material; control eriophyid mite vectors; remove severely affected trees.",
+    "careAdjustments": "When removing affected material, disinfect pruning tools between plants, and never take propagation cuttings from a symptomatic tree."
   },
   {
     "name": "Almond leaf scorch (Xylella fastidiosa)",
     "plant": "almond",
     "symptoms": ["marginal leaf scorch on almond leaves", "premature defoliation of almond trees", "branch dieback on almond"],
-    "treatment": "No known cure; remove and destroy infected trees under regional Xylella containment protocols; control leafhopper and spittlebug vectors; report to the Regional Plant Health Observatory."
+    "treatment": "No known cure; remove and destroy infected trees under regional Xylella containment protocols; control leafhopper and spittlebug vectors; report to the Regional Plant Health Observatory.",
+    "treatmentCaveats": "Same as for the olive strain: this is a regulated quarantine pathogen; do not attempt unauthorized treatment or movement of plant material — follow official protocols regardless of season."
   },
   {
     "name": "Brown rot (Monilinia laxa)",
     "plant": "almond",
     "symptoms": ["brown rot on almond fruit", "blighted almond blossoms", "gummy exudate on almond twigs"],
-    "treatment": "Apply fungicide treatments at bloom stage; prune out and destroy mummified fruit and blighted twigs; improve canopy ventilation."
+    "treatment": "Apply fungicide treatments at bloom stage; prune out and destroy mummified fruit and blighted twigs; improve canopy ventilation.",
+    "careAdjustments": "After a bloom-time fungicide application, avoid overhead irrigation for the following days to preserve the deposit and avoid extending petal wetness, which favors infection.",
+    "treatmentCaveats": "Bloom-stage sprays should avoid peak flower-opening/pollinator-activity periods where possible (favor early morning or evening application) to reduce pollinator exposure; avoid spraying right before rain, since blossom blight risk is highest during wet, mild bloom-time weather and the fungicide would wash off before taking effect."
   }
 ]

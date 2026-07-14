@@ -77,7 +77,16 @@ public class PlantDiagnosisTool implements Tool {
 
         StringBuilder sb = new StringBuilder();
         for (PlantDisease disease : matches) {
-            sb.append(disease.name()).append(": ").append(disease.treatment()).append(System.lineSeparator());
+            sb.append(disease.name()).append(": ").append(disease.treatment());
+            if (disease.careAdjustments() != null && !disease.careAdjustments().isBlank()) {
+                sb.append(System.lineSeparator())
+                        .append("  Care notes: ").append(disease.careAdjustments());
+            }
+            if (disease.treatmentCaveats() != null && !disease.treatmentCaveats().isBlank()) {
+                sb.append(System.lineSeparator())
+                        .append("  Timing/deviation notes: ").append(disease.treatmentCaveats());
+            }
+            sb.append(System.lineSeparator());
         }
         return sb.toString().stripTrailing();
     }
