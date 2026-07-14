@@ -15,7 +15,7 @@ public class AnthropicDtos {
             List<ToolDefinition> tools
     ) {}
 
-    public record ChatMessage(String role, Object content) {} // content: String oppure List<ContentBlock>
+    public record ChatMessage(String role, Object content) {} // content: String or List<ContentBlock>
 
     public record ToolDefinition(
             String name,
@@ -27,9 +27,9 @@ public class AnthropicDtos {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record ContentBlock(
             String type,
-            String text,                          // per type="text"
-            String id, String name, Object input,  // per type="tool_use"
-            String tool_use_id, Object content      // per type="tool_result"
+            String text,                          // for type="text"
+            String id, String name, Object input,  // for type="tool_use"
+            String tool_use_id, Object content      // for type="tool_result"
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)

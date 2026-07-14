@@ -52,7 +52,7 @@ public class ClaudeService {
         Conversation conversation = conversationId == null
                 ? conversationRepository.save(new Conversation())
                 : conversationRepository.findById(conversationId)
-                        .orElseThrow(() -> new LlmException("Conversazione non trovata"));
+                        .orElseThrow(() -> new LlmException("Conversation not found"));
 
         Message userMsg = new Message();
         userMsg.setConversation(conversation);
@@ -62,9 +62,9 @@ public class ClaudeService {
 
         List<Message> history = messageRepository.findByConversationIdOrderByCreatedAtAsc(conversation.getId());
 
-        // Lista di lavoro solo in memoria: i turni intermedi tool_use/tool_result
-        // non vengono mai persistiti — solo il messaggio utente (già salvato sopra)
-        // e la risposta testuale finale (salvata a fine metodo).
+        // In-memory working list only: intermediate tool_use/tool_result turns
+        // are never persisted — only the user message (already saved above)
+        // and the final text reply (saved at the end of this method).
         List<ChatMessage> messages = new ArrayList<>(history.stream()
                 .map(m -> new ChatMessage(m.getRole(), m.getContent()))
                 .toList());
@@ -81,14 +81,14 @@ public class ClaudeService {
                         .filter(block -> "text".equals(block.type()))
                         .map(ContentBlock::text)
                         .findFirst()
-                        .orElse("(nessuna risposta)");
+                        .orElse("(no response)");
                 break;
             }
 
             ContentBlock toolUse = response.content().stream()
                     .filter(block -> "tool_use".equals(block.type()))
                     .findFirst()
-                    .orElseThrow(() -> new LlmException("Il modello ha segnalato tool_use senza fornire un blocco tool_use"));
+                    .orElseThrow(() -> new LlmException("Model reported tool_use but did not provide a tool_use block"));
 
             String result = toolRegistry.execute(toolUse.name(), toolUse.input());
 
@@ -99,7 +99,7 @@ public class ClaudeService {
         }
 
         if (finalText == null) {
-            throw new LlmException("Numero massimo di iterazioni tool superato (" + MAX_TOOL_ITERATIONS + ")");
+            throw new LlmException("Maximum tool iteration count exceeded (" + MAX_TOOL_ITERATIONS + ")");
         }
 
         Message assistantMsg = new Message();
@@ -119,10 +119,10 @@ public class ClaudeService {
                     .retrieve()
                     .body(AnthropicResponse.class);
         } catch (RestClientException e) {
-            throw new LlmException("Errore nella chiamata all'API Anthropic", e);
+            throw new LlmException("Error calling Anthropic API", e);
         }
         if (response == null || response.content() == null) {
-            throw new LlmException("Risposta vuota dall'API Anthropic");
+            throw new LlmException("Empty response from Anthropic API");
         }
         return response;
     }

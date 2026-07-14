@@ -16,7 +16,7 @@ public class CurrentTimeTool implements Tool {
 
     @Override
     public String description() {
-        return "Restituisce data e ora correnti. Usalo quando l'utente chiede l'ora o la data.";
+        return "Returns the current date and time. Use it when the user asks for the time or the date.";
     }
 
     @Override

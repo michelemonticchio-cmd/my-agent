@@ -16,9 +16,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LlmException.class)
     public ResponseEntity<ErrorResponse> handleLlmException(LlmException e) {
-        log.error("Chiamata all'API Anthropic fallita", e);
+        log.error("Call to Anthropic API failed", e);
         return ResponseEntity
                 .status(HttpStatus.BAD_GATEWAY)
-                .body(new ErrorResponse("Servizio AI non disponibile, riprova più tardi"));
+                .body(new ErrorResponse("AI service unavailable, please try again later"));
     }
 }

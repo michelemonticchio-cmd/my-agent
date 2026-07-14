@@ -27,13 +27,13 @@ public class ToolRegistry {
     public String execute(String name, Object rawInput) {
         Tool tool = toolsByName.get(name);
         if (tool == null) {
-            throw new LlmException("Il modello ha richiesto un tool sconosciuto: " + name);
+            throw new LlmException("Model requested an unknown tool: " + name);
         }
         Map<String, Object> input = rawInput instanceof Map<?, ?> m ? castToStringObjectMap(m) : Map.of();
         try {
             return tool.execute(input);
         } catch (RuntimeException e) {
-            throw new LlmException("Errore nell'esecuzione del tool '" + name + "'", e);
+            throw new LlmException("Error executing tool '" + name + "'", e);
         }
     }
 

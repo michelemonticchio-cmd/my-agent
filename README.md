@@ -1,19 +1,19 @@
 # My Agent
 
-Agente AI con backend Spring Boot: analizza repository GitHub tramite
-LLM con function calling.
+Conversational AI agent with a Spring Boot backend, built from scratch to
+demonstrate full-stack Java + AI integration skills — not just a chat wrapper.
 
 ## Stack
 - Java 25, Spring Boot, Spring Data JPA
-- H2 (dev) → PostgreSQL (previsto)
-- API LLM Anthropic
+- H2 (dev) → PostgreSQL (planned)
+- Anthropic LLM API
 
-## Funzionalità
-- [x] Endpoint `POST /api/chat` — invia un messaggio a Claude e restituisce la risposta
-- [x] Memoria conversazionale (cronologia su DB)
-- [ ] Function calling / tool
-- [ ] Autenticazione JWT
-- [ ] Frontend chat
+## Features
+- [x] `POST /api/chat` endpoint — sends a message to Claude and returns the reply
+- [x] Conversation memory (history persisted to DB)
+- [x] Function calling / tools (agent loop with tool_use)
+- [ ] JWT authentication
+- [ ] Chat frontend
 
-## Configurazione
-Richiede la variabile d'ambiente `ANTHROPIC_API_KEY`.
+## Configuration
+Requires the `ANTHROPIC_API_KEY` environment variable.
