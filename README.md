@@ -22,6 +22,10 @@ instructs the model to combine them on its own — e.g. diagnosing a disease,
 then factoring in the season and the forecast before suggesting (or
 adapting) a treatment — without any hardcoded orchestration logic in Java.
 
+Symptoms can be described in words or shown in a photo: a dedicated endpoint
+accepts an image upload, and Claude's own vision recognizes visible symptoms
+directly, feeding them into the same diagnosis tool used for text.
+
 ## Architecture highlights
 - **Agent loop with tool calling**: `ClaudeService` drives a loop that keeps
   calling the Anthropic API and executing tools until the model returns a
@@ -56,10 +60,12 @@ adapting) a treatment — without any hardcoded orchestration logic in Java.
 
 ## Features
 - [x] `POST /api/chat` endpoint — sends a message to Claude and returns the reply
+- [x] `POST /api/chat/image` endpoint — multipart image upload with an optional
+      text caption, for visual symptom diagnosis
 - [x] Conversation memory (history persisted to DB)
 - [x] Function calling / tools (agent loop with tool_use)
 - [x] Multi-turn parallel tool calls (multiple `tool_use` blocks per turn)
-- [ ] Multimodal input (plant photos)
+- [x] Multimodal input (plant photos)
 - [ ] JWT authentication
 - [ ] Chat frontend
 - [ ] Docker / streaming responses

@@ -26,9 +26,11 @@ public class PlantDiagnosisTool implements Tool {
         return "Looks up known diseases and pests affecting the crops most common in Salento " +
                 "(olive, grapevine, citrus, fig, almond) against a curated local knowledge base, given " +
                 "the affected plant and a list of observed symptoms. " +
-                "Identify the plant type from the user's message and translate it into one of: olive, " +
-                "grapevine, citrus, fig, almond. Extract the symptoms described by the user and translate " +
-                "them into English keywords chosen from this controlled vocabulary: wilting branches, " +
+                "Identify the plant type, whether stated in the user's message or visible in an attached " +
+                "photo, and translate it into one of: olive, grapevine, citrus, fig, almond. Extract the " +
+                "symptoms — described in words by the user, or that you can visually recognize yourself in " +
+                "an attached photo of the plant — and translate them into English keywords chosen from " +
+                "this controlled vocabulary: wilting branches, " +
                 "scorched leaves, tree drying in patches, black spots on olives, oviposition holes in " +
                 "olives, fallen olives, olive rot, sooty mold on leaves, sticky honeydew on leaves, small " +
                 "brown bumps on twigs and leaves, yellow-brown spots on upper leaf surface, premature leaf " +

@@ -30,8 +30,11 @@ public class AnthropicDtos {
             String type,
             String text,                          // for type="text"
             String id, String name, Object input,  // for type="tool_use"
-            String tool_use_id, Object content      // for type="tool_result"
+            String tool_use_id, Object content,     // for type="tool_result"
+            ImageSource source                      // for type="image"
     ) {}
+
+    public record ImageSource(String type, String media_type, String data) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record AnthropicResponse(List<ContentBlock> content, String stop_reason) {}

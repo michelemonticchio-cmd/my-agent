@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -59,15 +60,29 @@ public class ClaudeService {
     public record ChatResult(Long conversationId, String reply) {}
 
     public ChatResult chat(Long conversationId, String userMessage) {
+        return chat(conversationId, userMessage, null, null, null);
+    }
+
+    public ChatResult chat(Long conversationId, String userMessage, byte[] imageBytes, String imageMediaType, String imageFilename) {
         Conversation conversation = conversationId == null
                 ? conversationRepository.save(new Conversation())
                 : conversationRepository.findById(conversationId)
                         .orElseThrow(() -> new LlmException("Conversation not found"));
 
+        // Images are never persisted to the DB (Message.content is a plain String column, and
+        // there's no need to "re-see" a past photo in later turns): only a text placeholder is
+        // saved, while the raw bytes are used for this request's Anthropic call below and then
+        // discarded. The model's own full-text diagnosis reply IS persisted as usual, so later
+        // turns (e.g. "how's the treatment going?") still have everything needed to connect back
+        // to what was diagnosed from the photo, purely through normal conversation memory.
+        String persistedContent = imageBytes == null
+                ? userMessage
+                : "[Image attached: " + imageFilename + "] " + (userMessage == null ? "" : userMessage);
+
         Message userMsg = new Message();
         userMsg.setConversation(conversation);
         userMsg.setRole("user");
-        userMsg.setContent(userMessage);
+        userMsg.setContent(persistedContent);
         messageRepository.save(userMsg);
 
         List<Message> history = messageRepository.findByConversationIdOrderByCreatedAtAsc(conversation.getId());
@@ -78,6 +93,17 @@ public class ClaudeService {
         List<ChatMessage> messages = new ArrayList<>(history.stream()
                 .map(m -> new ChatMessage(m.getRole(), m.getContent()))
                 .toList());
+
+        if (imageBytes != null) {
+            List<ContentBlock> currentTurnContent = new ArrayList<>();
+            String base64Data = Base64.getEncoder().encodeToString(imageBytes);
+            currentTurnContent.add(new ContentBlock("image", null, null, null, null, null, null,
+                    new ImageSource("base64", imageMediaType, base64Data)));
+            if (userMessage != null && !userMessage.isBlank()) {
+                currentTurnContent.add(new ContentBlock("text", userMessage, null, null, null, null, null, null));
+            }
+            messages.set(messages.size() - 1, new ChatMessage("user", currentTurnContent));
+        }
 
         List<ToolDefinition> tools = toolRegistry.toolDefinitions();
 
@@ -109,7 +135,7 @@ public class ClaudeService {
             List<ContentBlock> toolResults = toolUses.stream()
                     .map(toolUse -> {
                         String result = toolRegistry.execute(toolUse.name(), toolUse.input());
-                        return new ContentBlock("tool_result", null, null, null, null, toolUse.id(), result);
+                        return new ContentBlock("tool_result", null, null, null, null, toolUse.id(), result, null);
                     })
                     .toList();
 
