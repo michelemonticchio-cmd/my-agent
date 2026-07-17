@@ -45,6 +45,9 @@ directly, feeding them into the same diagnosis tool used for text.
   implementation details
 - **Conversation memory**: the Anthropic API is stateless, so `ClaudeService`
   reloads the full message history from the database on every call
+- **JWT authentication**: a stateless `JwtAuthFilter` validates a bearer token
+  on every request; each conversation is tied to its owning user, and access
+  to another user's conversation is rejected
 
 ## Tools available
 | Tool | Purpose | Data source |
@@ -54,9 +57,11 @@ directly, feeding them into the same diagnosis tool used for text.
 | `diagnose_plant_disease` | Disease/pest lookup by symptoms, with treatment care-adjustments and timing caveats | Curated local JSON knowledge base |
 
 ## Stack
-- Java 25, Spring Boot, Spring Data JPA
+- Java 25, Spring Boot, Spring Data JPA, Spring Security
 - H2 (dev) → PostgreSQL (planned)
 - Anthropic LLM API
+- JJWT for token issuance/validation
+- Static HTML/CSS/JS chat frontend (no build step)
 
 ## Features
 - [x] `POST /api/chat` endpoint — sends a message to Claude and returns the reply
@@ -66,9 +71,9 @@ directly, feeding them into the same diagnosis tool used for text.
 - [x] Function calling / tools (agent loop with tool_use)
 - [x] Multi-turn parallel tool calls (multiple `tool_use` blocks per turn)
 - [x] Multimodal input (plant photos)
-- [ ] JWT authentication
-- [ ] Chat frontend
+- [x] JWT authentication (register/login, per-user conversation ownership)
+- [x] Chat frontend (static HTML/CSS/JS, login screen included)
 - [ ] Docker / streaming responses
 
 ## Configuration
-Requires the `ANTHROPIC_API_KEY` environment variable.
+Requires the `ANTHROPIC_API_KEY` and `JWT_SECRET` environment variables.

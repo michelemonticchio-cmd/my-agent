@@ -8,18 +8,19 @@ import lombok.Setter;
 import java.time.Instant;
 
 @Entity
+@Table(name = "app_user")
 @Getter @Setter @NoArgsConstructor
-public class Conversation {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @Column(unique = true, nullable = false)
+    private String username;
 
-    private String title;
+    @Column(nullable = false)
+    private String passwordHash;
 
     private Instant createdAt = Instant.now();
 }

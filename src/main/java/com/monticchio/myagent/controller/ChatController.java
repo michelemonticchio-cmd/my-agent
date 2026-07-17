@@ -4,6 +4,7 @@ import com.monticchio.myagent.exception.LlmException;
 import com.monticchio.myagent.service.ClaudeService;
 import com.monticchio.myagent.service.ClaudeService.ChatResult;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,13 +24,14 @@ public class ChatController {
     public record ChatResponse(Long conversationId, String reply) {}
 
     @PostMapping("/chat")
-    public ChatResponse chat(@RequestBody ChatRequest request) {
-        ChatResult result = claudeService.chat(request.conversationId(), request.message());
+    public ChatResponse chat(@RequestBody ChatRequest request, Authentication authentication) {
+        ChatResult result = claudeService.chat(authentication.getName(), request.conversationId(), request.message());
         return new ChatResponse(result.conversationId(), result.reply());
     }
 
     @PostMapping(value = "/chat/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ChatResponse chatWithImage(
+            Authentication authentication,
             @RequestParam(required = false) Long conversationId,
             @RequestParam(required = false) String message,
             @RequestParam("image") MultipartFile image) {
@@ -40,7 +42,7 @@ public class ChatController {
             throw new LlmException("Failed to read uploaded image", e);
         }
         ChatResult result = claudeService.chat(
-                conversationId, message, imageBytes, image.getContentType(), image.getOriginalFilename());
+                authentication.getName(), conversationId, message, imageBytes, image.getContentType(), image.getOriginalFilename());
         return new ChatResponse(result.conversationId(), result.reply());
     }
 }
