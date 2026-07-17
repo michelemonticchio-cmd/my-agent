@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente Agronomico Salento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-box">
+            <h1>🌿 Assistente Agronomico</h1>
+            <form id="auth-form">
+                <input type="text" id="auth-username" placeholder="Nome utente" autocomplete="username" required>
+                <input type="password" id="auth-password" placeholder="Password" autocomplete="current-password" required>
+                <button type="submit" id="auth-submit">Accedi</button>
+            </form>
+            <p id="auth-error" class="auth-error" hidden></p>
+            <p class="auth-toggle">
+                <a href="#" id="auth-toggle-link">Non hai un account? Registrati</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="app" class="app" hidden>
+        <header class="app-header">
+            <div>
+                <h1>🌿 Assistente Agronomico — Salento</h1>
+                <p class="subtitle">Ulivo · Vigneto · Agrumi · Fico · Mandorlo</p>
+            </div>
+            <button type="button" id="logout-button" class="logout-button" title="Esci">Esci</button>
+        </header>
+
+        <div id="chat-log" class="chat-log"></div>
+
+        <div id="attachment-preview" class="attachment-preview" hidden>
+            <img id="attachment-thumb" class="attachment-thumb" alt="">
+            <span id="attachment-name" class="attachment-name"></span>
+            <button type="button" id="attachment-remove" class="attachment-remove" title="Rimuovi foto">✕</button>
+        </div>
+
+        <form id="chat-form" class="chat-form">
+            <label class="attach-button" title="Allega una foto della pianta">
+                📷
+                <input type="file" id="image-input" accept="image/*" hidden>
+            </label>
+            <input type="text" id="message-input" placeholder="Scrivi un messaggio..." autocomplete="off">
+            <button type="submit">Invia</button>
+        </form>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

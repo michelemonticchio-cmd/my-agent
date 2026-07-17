@@ -3,9 +3,12 @@ package com.monticchio.myagent.service;
 import com.monticchio.myagent.dto.AnthropicDtos.*;
 import com.monticchio.myagent.entity.Conversation;
 import com.monticchio.myagent.entity.Message;
+import com.monticchio.myagent.entity.User;
+import com.monticchio.myagent.exception.ForbiddenException;
 import com.monticchio.myagent.exception.LlmException;
 import com.monticchio.myagent.repository.ConversationRepository;
 import com.monticchio.myagent.repository.MessageRepository;
+import com.monticchio.myagent.repository.UserRepository;
 import com.monticchio.myagent.tool.ToolRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ public class ClaudeService {
     private final String systemPrompt;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
     private final ToolRegistry toolRegistry;
 
     public ClaudeService(
@@ -37,11 +41,13 @@ public class ClaudeService {
             @Value("${anthropic.model}") String model,
             ConversationRepository conversationRepository,
             MessageRepository messageRepository,
+            UserRepository userRepository,
             ToolRegistry toolRegistry) {
 
         this.model = model;
         this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
         this.toolRegistry = toolRegistry;
         this.restClient = RestClient.builder()
                 .baseUrl(apiUrl)
@@ -59,15 +65,26 @@ public class ClaudeService {
 
     public record ChatResult(Long conversationId, String reply) {}
 
-    public ChatResult chat(Long conversationId, String userMessage) {
-        return chat(conversationId, userMessage, null, null, null);
+    public ChatResult chat(String username, Long conversationId, String userMessage) {
+        return chat(username, conversationId, userMessage, null, null, null);
     }
 
-    public ChatResult chat(Long conversationId, String userMessage, byte[] imageBytes, String imageMediaType, String imageFilename) {
-        Conversation conversation = conversationId == null
-                ? conversationRepository.save(new Conversation())
-                : conversationRepository.findById(conversationId)
-                        .orElseThrow(() -> new LlmException("Conversation not found"));
+    public ChatResult chat(String username, Long conversationId, String userMessage, byte[] imageBytes, String imageMediaType, String imageFilename) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new LlmException("Authenticated user not found: " + username));
+
+        Conversation conversation;
+        if (conversationId == null) {
+            conversation = new Conversation();
+            conversation.setOwner(user);
+            conversationRepository.save(conversation);
+        } else {
+            conversation = conversationRepository.findById(conversationId)
+                    .orElseThrow(() -> new LlmException("Conversation not found"));
+            if (!conversation.getOwner().getId().equals(user.getId())) {
+                throw new ForbiddenException("You do not have access to this conversation");
+            }
+        }
 
         // Images are never persisted to the DB (Message.content is a plain String column, and
         // there's no need to "re-see" a past photo in later turns): only a text placeholder is
