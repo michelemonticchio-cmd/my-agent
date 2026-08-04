@@ -37,7 +37,7 @@ public class SecurityConfig {
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/", "/*.html", "/*.js", "/*.css", "/h2-console/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/payment/webhook", "/", "/*.html", "/*.js", "/*.css", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

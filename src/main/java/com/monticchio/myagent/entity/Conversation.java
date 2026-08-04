@@ -21,5 +21,7 @@ public class Conversation {
 
     private String title;
 
+    private String plantationLabel;
+
     private Instant createdAt = Instant.now();
 }

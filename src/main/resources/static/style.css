@@ -13,13 +13,100 @@ body {
 .app {
     width: 100%;
     display: flex;
-    flex-direction: column;
     height: 100vh;
     background: #fff;
 }
 
 .app[hidden] {
     display: none;
+}
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-width: 0;
+}
+
+.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: #24402b;
+    color: #fff;
+    height: 100vh;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    font-weight: 600;
+}
+
+.sidebar-close {
+    display: none;
+    border: none;
+    background: none;
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.conversation-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 8px;
+}
+
+.conversation-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    border: none;
+    background: none;
+    color: #d8e3da;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.conversation-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.conversation-item.active {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+}
+
+.conversation-item-group {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.new-plant-button {
+    margin: 12px;
+    padding: 10px;
+    border: 1px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.new-plant-button:hover {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .app-header {
@@ -32,9 +119,95 @@ body {
     color: #fff;
 }
 
+.app-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-toggle {
+    display: none;
+    border: none;
+    background: none;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
 .app-header h1 {
     margin: 0;
     font-size: 1.2rem;
+}
+
+.app-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quota-badge {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    white-space: nowrap;
+}
+
+.quota-badge.unlimited {
+    background: rgba(255, 215, 0, 0.25);
+}
+
+.unlock-button {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 10px;
+    background: #7a2020;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.unlock-button:hover {
+    background: #922828;
+}
+
+.account-button {
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.account-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.account-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.9rem;
+}
+
+.account-label {
+    color: #6b7a6b;
+}
+
+.account-value {
+    font-weight: 600;
+    text-align: right;
 }
 
 .logout-button {
@@ -175,6 +348,13 @@ body {
     color: #7a2020;
 }
 
+.attached-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
 .attached-image {
     max-width: 220px;
     max-height: 220px;
@@ -182,14 +362,10 @@ body {
     height: auto;
     object-fit: cover;
     border-radius: 10px;
-    margin-bottom: 8px;
     display: block;
 }
 
 .attachment-preview {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     padding: 8px 16px;
     border-top: 1px solid #e2e8e2;
     background: #fafcfa;
@@ -199,16 +375,34 @@ body {
     display: none;
 }
 
+.attachment-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.attachment-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 200px;
+    padding: 4px 8px;
+    border: 1px solid #e2e8e2;
+    border-radius: 20px;
+    background: #fff;
+}
+
 .attachment-thumb {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     object-fit: cover;
     border-radius: 8px;
+    flex-shrink: 0;
 }
 
 .attachment-name {
     flex: 1;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #4a554a;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -221,6 +415,7 @@ body {
     color: #7a2020;
     font-size: 1rem;
     cursor: pointer;
+    flex-shrink: 0;
     padding: 4px 8px;
 }
 
@@ -271,4 +466,98 @@ body {
 .chat-form button[type="submit"]:disabled {
     opacity: 0.6;
     cursor: default;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 340px;
+    padding: 24px;
+    background: #fff;
+    border-radius: 16px;
+}
+
+.modal-box h2 {
+    margin: 0 0 16px;
+    font-size: 1.1rem;
+    color: #2f6d3c;
+}
+
+#new-plant-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#new-plant-form input {
+    padding: 10px 14px;
+    border: 1px solid #ccd6cc;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+}
+
+#new-plant-form input:focus {
+    border-color: #2f6d3c;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.modal-cancel {
+    padding: 8px 14px;
+    border: 1px solid #ccd6cc;
+    border-radius: 10px;
+    background: #fff;
+    color: #4a554a;
+    cursor: pointer;
+}
+
+.modal-confirm {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 10px;
+    background: #2f6d3c;
+    color: #fff;
+    cursor: pointer;
+}
+
+@media (max-width: 720px) {
+    .sidebar {
+        position: fixed;
+        inset: 0 25% 0 0;
+        z-index: 20;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease-out;
+        box-shadow: 2px 0 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-close {
+        display: block;
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
 }

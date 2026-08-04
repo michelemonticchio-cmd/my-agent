@@ -22,9 +22,16 @@ instructs the model to combine them on its own — e.g. diagnosing a disease,
 then factoring in the season and the forecast before suggesting (or
 adapting) a treatment — without any hardcoded orchestration logic in Java.
 
-Symptoms can be described in words or shown in a photo: a dedicated endpoint
-accepts an image upload, and Claude's own vision recognizes visible symptoms
-directly, feeding them into the same diagnosis tool used for text.
+Symptoms can be described in words or shown in one or more photos: a dedicated
+endpoint accepts multiple image uploads, and Claude's own vision recognizes
+visible symptoms directly, feeding them into the same diagnosis tool used for
+text.
+
+Users can track individual plants over time: each plant gets its own
+dedicated conversation (with an optional plantation/grove label), so its full
+history — symptoms, diagnoses, treatments, outcomes — naturally informs later
+advice, without any separate "memory" data model beyond the conversation
+itself.
 
 ## Architecture highlights
 - **Agent loop with tool calling**: `ClaudeService` drives a loop that keeps
@@ -48,6 +55,13 @@ directly, feeding them into the same diagnosis tool used for text.
 - **JWT authentication**: a stateless `JwtAuthFilter` validates a bearer token
   on every request; each conversation is tied to its owning user, and access
   to another user's conversation is rejected
+- **Per-plant conversations as memory**: an unused `Conversation.title` field
+  became the basis for per-plant "case files" — no new data model needed,
+  since full message history was already persisted
+- **Rate limiting + paid unlock**: a fixed 2-hour window caps free requests
+  per user; a real Stripe Checkout session (test mode) unlocks unlimited
+  requests for the rest of the current window, confirmed via a
+  signature-verified webhook rather than trusting the client redirect
 
 ## Tools available
 | Tool | Purpose | Data source |
@@ -61,6 +75,7 @@ directly, feeding them into the same diagnosis tool used for text.
 - H2 (dev) → PostgreSQL (planned)
 - Anthropic LLM API
 - JJWT for token issuance/validation
+- Stripe (test mode) for payments
 - Static HTML/CSS/JS chat frontend (no build step)
 
 ## Features
@@ -70,10 +85,14 @@ directly, feeding them into the same diagnosis tool used for text.
 - [x] Conversation memory (history persisted to DB)
 - [x] Function calling / tools (agent loop with tool_use)
 - [x] Multi-turn parallel tool calls (multiple `tool_use` blocks per turn)
-- [x] Multimodal input (plant photos)
+- [x] Multimodal input (multiple plant photos per message)
 - [x] JWT authentication (register/login, per-user conversation ownership)
 - [x] Chat frontend (static HTML/CSS/JS, login screen included)
+- [x] Per-plant conversation sidebar (named "case files", optional plantation grouping)
+- [x] Rate limiting (free requests per 2-hour window) with Stripe-based unlock
+- [x] Account panel (username, registration date, live quota status)
 - [ ] Docker / streaming responses
 
 ## Configuration
-Requires the `ANTHROPIC_API_KEY` and `JWT_SECRET` environment variables.
+Requires the `ANTHROPIC_API_KEY`, `JWT_SECRET`, `STRIPE_SECRET_KEY` and
+`STRIPE_WEBHOOK_SECRET` environment variables.

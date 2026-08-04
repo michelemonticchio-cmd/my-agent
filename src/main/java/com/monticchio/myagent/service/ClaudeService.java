@@ -4,11 +4,8 @@ import com.monticchio.myagent.dto.AnthropicDtos.*;
 import com.monticchio.myagent.entity.Conversation;
 import com.monticchio.myagent.entity.Message;
 import com.monticchio.myagent.entity.User;
-import com.monticchio.myagent.exception.ForbiddenException;
 import com.monticchio.myagent.exception.LlmException;
-import com.monticchio.myagent.repository.ConversationRepository;
 import com.monticchio.myagent.repository.MessageRepository;
-import com.monticchio.myagent.repository.UserRepository;
 import com.monticchio.myagent.tool.ToolRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,24 +27,24 @@ public class ClaudeService {
     private final RestClient restClient;
     private final String model;
     private final String systemPrompt;
-    private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
-    private final UserRepository userRepository;
+    private final ConversationService conversationService;
+    private final QuotaService quotaService;
     private final ToolRegistry toolRegistry;
 
     public ClaudeService(
             @Value("${anthropic.api.key}") String apiKey,
             @Value("${anthropic.api.url}") String apiUrl,
             @Value("${anthropic.model}") String model,
-            ConversationRepository conversationRepository,
             MessageRepository messageRepository,
-            UserRepository userRepository,
+            ConversationService conversationService,
+            QuotaService quotaService,
             ToolRegistry toolRegistry) {
 
         this.model = model;
-        this.conversationRepository = conversationRepository;
         this.messageRepository = messageRepository;
-        this.userRepository = userRepository;
+        this.conversationService = conversationService;
+        this.quotaService = quotaService;
         this.toolRegistry = toolRegistry;
         this.restClient = RestClient.builder()
                 .baseUrl(apiUrl)
@@ -65,26 +62,17 @@ public class ClaudeService {
 
     public record ChatResult(Long conversationId, String reply) {}
 
+    public record ImageAttachment(byte[] data, String mediaType, String filename) {}
+
     public ChatResult chat(String username, Long conversationId, String userMessage) {
-        return chat(username, conversationId, userMessage, null, null, null);
+        return chat(username, conversationId, userMessage, List.of());
     }
 
-    public ChatResult chat(String username, Long conversationId, String userMessage, byte[] imageBytes, String imageMediaType, String imageFilename) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new LlmException("Authenticated user not found: " + username));
+    public ChatResult chat(String username, Long conversationId, String userMessage, List<ImageAttachment> images) {
+        User user = conversationService.getUser(username);
+        quotaService.checkAndConsume(user);
 
-        Conversation conversation;
-        if (conversationId == null) {
-            conversation = new Conversation();
-            conversation.setOwner(user);
-            conversationRepository.save(conversation);
-        } else {
-            conversation = conversationRepository.findById(conversationId)
-                    .orElseThrow(() -> new LlmException("Conversation not found"));
-            if (!conversation.getOwner().getId().equals(user.getId())) {
-                throw new ForbiddenException("You do not have access to this conversation");
-            }
-        }
+        Conversation conversation = conversationService.resolveOwnedConversation(username, conversationId);
 
         // Images are never persisted to the DB (Message.content is a plain String column, and
         // there's no need to "re-see" a past photo in later turns): only a text placeholder is
@@ -92,9 +80,10 @@ public class ClaudeService {
         // discarded. The model's own full-text diagnosis reply IS persisted as usual, so later
         // turns (e.g. "how's the treatment going?") still have everything needed to connect back
         // to what was diagnosed from the photo, purely through normal conversation memory.
-        String persistedContent = imageBytes == null
+        String persistedContent = images.isEmpty()
                 ? userMessage
-                : "[Image attached: " + imageFilename + "] " + (userMessage == null ? "" : userMessage);
+                : "[Images attached: " + String.join(", ", images.stream().map(ImageAttachment::filename).toList())
+                        + "] " + (userMessage == null ? "" : userMessage);
 
         Message userMsg = new Message();
         userMsg.setConversation(conversation);
@@ -111,11 +100,13 @@ public class ClaudeService {
                 .map(m -> new ChatMessage(m.getRole(), m.getContent()))
                 .toList());
 
-        if (imageBytes != null) {
+        if (!images.isEmpty()) {
             List<ContentBlock> currentTurnContent = new ArrayList<>();
-            String base64Data = Base64.getEncoder().encodeToString(imageBytes);
-            currentTurnContent.add(new ContentBlock("image", null, null, null, null, null, null,
-                    new ImageSource("base64", imageMediaType, base64Data)));
+            for (ImageAttachment image : images) {
+                String base64Data = Base64.getEncoder().encodeToString(image.data());
+                currentTurnContent.add(new ContentBlock("image", null, null, null, null, null, null,
+                        new ImageSource("base64", image.mediaType(), base64Data)));
+            }
             if (userMessage != null && !userMessage.isBlank()) {
                 currentTurnContent.add(new ContentBlock("text", userMessage, null, null, null, null, null, null));
             }
@@ -123,11 +114,12 @@ public class ClaudeService {
         }
 
         List<ToolDefinition> tools = toolRegistry.toolDefinitions();
+        String effectiveSystemPrompt = buildSystemPrompt(conversation);
 
         String finalText = null;
 
         for (int iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
-            AnthropicResponse response = callAnthropic(new AnthropicRequest(model, 1024, messages, tools, systemPrompt));
+            AnthropicResponse response = callAnthropic(new AnthropicRequest(model, 1024, messages, tools, effectiveSystemPrompt));
 
             if (!"tool_use".equals(response.stop_reason())) {
                 finalText = response.content().stream()
@@ -171,6 +163,18 @@ public class ClaudeService {
         messageRepository.save(assistantMsg);
 
         return new ChatResult(conversation.getId(), finalText);
+    }
+
+    private String buildSystemPrompt(Conversation conversation) {
+        if (conversation.getTitle() == null) {
+            return systemPrompt;
+        }
+        String plantationNote = conversation.getPlantationLabel() != null
+                ? ", part of the \"" + conversation.getPlantationLabel() + "\" plantation/grove alongside other tracked plants"
+                : ", grown as a standalone plant not part of any tracked plantation/grove";
+        return systemPrompt + "\n\nThis conversation is the dedicated case file for a specific plant named \""
+                + conversation.getTitle() + "\"" + plantationNote + ". Treat the conversation history above as "
+                + "that plant's ongoing record and let it inform your diagnosis and treatment advice over time.";
     }
 
     private AnthropicResponse callAnthropic(AnthropicRequest request) {

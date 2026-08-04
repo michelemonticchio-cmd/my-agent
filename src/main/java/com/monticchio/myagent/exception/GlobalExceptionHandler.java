@@ -43,4 +43,19 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(e.getMessage()));
     }
+
+    @ExceptionHandler(QuotaExceededException.class)
+    public ResponseEntity<ErrorResponse> handleQuotaExceeded(QuotaExceededException e) {
+        return ResponseEntity
+                .status(HttpStatus.PAYMENT_REQUIRED)
+                .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<ErrorResponse> handlePayment(PaymentException e) {
+        log.error("Stripe payment operation failed", e);
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(new ErrorResponse("Payment service unavailable, please try again later"));
+    }
 }

@@ -22,5 +22,11 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
+    private int requestCount = 0;
+
+    private Instant windowStart;
+
+    private boolean unlimitedThisWindow = false;
+
     private Instant createdAt = Instant.now();
 }

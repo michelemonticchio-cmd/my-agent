@@ -23,30 +23,83 @@
     </div>
 
     <div id="app" class="app" hidden>
-        <header class="app-header">
-            <div>
-                <h1>🌿 Assistente Agronomico — Salento</h1>
-                <p class="subtitle">Ulivo · Vigneto · Agrumi · Fico · Mandorlo</p>
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">🌿 Le mie piante</span>
+                <button type="button" id="sidebar-close" class="sidebar-close" title="Chiudi">✕</button>
             </div>
-            <button type="button" id="logout-button" class="logout-button" title="Esci">Esci</button>
-        </header>
+            <div id="conversation-list" class="conversation-list"></div>
+            <button type="button" id="new-plant-button" class="new-plant-button">+ Nuova pianta</button>
+        </aside>
 
-        <div id="chat-log" class="chat-log"></div>
+        <div class="chat-main">
+            <header class="app-header">
+                <div class="app-header-left">
+                    <button type="button" id="sidebar-toggle" class="sidebar-toggle" title="Menu">☰</button>
+                    <div>
+                        <h1 id="conversation-title">💬 Chat generale</h1>
+                        <p class="subtitle" id="conversation-subtitle">Ulivo · Vigneto · Agrumi · Fico · Mandorlo</p>
+                    </div>
+                </div>
+                <div class="app-header-right">
+                    <span id="quota-badge" class="quota-badge"></span>
+                    <button type="button" id="account-button" class="account-button" title="Account">👤</button>
+                    <button type="button" id="logout-button" class="logout-button" title="Esci">Esci</button>
+                </div>
+            </header>
 
-        <div id="attachment-preview" class="attachment-preview" hidden>
-            <img id="attachment-thumb" class="attachment-thumb" alt="">
-            <span id="attachment-name" class="attachment-name"></span>
-            <button type="button" id="attachment-remove" class="attachment-remove" title="Rimuovi foto">✕</button>
+            <div id="chat-log" class="chat-log"></div>
+
+            <div id="attachment-preview" class="attachment-preview" hidden>
+                <div id="attachment-list" class="attachment-list"></div>
+            </div>
+
+            <form id="chat-form" class="chat-form">
+                <label class="attach-button" title="Allega una o più foto della pianta">
+                    📷
+                    <input type="file" id="image-input" accept="image/*" multiple hidden>
+                </label>
+                <input type="text" id="message-input" placeholder="Scrivi un messaggio..." autocomplete="off">
+                <button type="submit">Invia</button>
+            </form>
         </div>
 
-        <form id="chat-form" class="chat-form">
-            <label class="attach-button" title="Allega una foto della pianta">
-                📷
-                <input type="file" id="image-input" accept="image/*" hidden>
-            </label>
-            <input type="text" id="message-input" placeholder="Scrivi un messaggio..." autocomplete="off">
-            <button type="submit">Invia</button>
-        </form>
+        <div id="new-plant-modal" class="modal-overlay" hidden>
+            <div class="modal-box">
+                <h2>Nuova pianta</h2>
+                <form id="new-plant-form">
+                    <input type="text" id="new-plant-name" placeholder="Nome pianta (es. Ulivo del giardino)" required>
+                    <input type="text" id="new-plant-group" placeholder="Gruppo/piantagione (opzionale)">
+                    <div class="modal-actions">
+                        <button type="button" id="new-plant-cancel" class="modal-cancel">Annulla</button>
+                        <button type="submit" class="modal-confirm">Crea</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="account-modal" class="modal-overlay" hidden>
+            <div class="modal-box">
+                <h2>Account</h2>
+                <div class="account-info">
+                    <div class="account-row">
+                        <span class="account-label">Utente</span>
+                        <span id="account-username" class="account-value"></span>
+                    </div>
+                    <div class="account-row">
+                        <span class="account-label">Registrato il</span>
+                        <span id="account-created" class="account-value"></span>
+                    </div>
+                    <div class="account-row">
+                        <span class="account-label">Quota richieste</span>
+                        <span id="account-quota" class="account-value"></span>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="account-close" class="modal-cancel">Chiudi</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
